@@ -10,8 +10,9 @@ import {
   GridComponent,
 } from "echarts/components";
 import VChart, { THEME_KEY } from "vue-echarts";
-import {useDateFormat} from '@vueuse/core'
-
+import { useDateFormat, useFetch } from '@vueuse/core'
+import { NMessageProvider } from 'naive-ui'
+import Operations from './components/Operations.vue';
 use([
   CanvasRenderer,
   LineChart,
@@ -22,19 +23,20 @@ use([
   GridComponent
 ]);
 
-// provide(THEME_KEY, "dark");
-
 const option = ref({
+  title:{
+    text:'MAO.'
+  },
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: Array(10).fill('-')
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: Array(10).fill(0),
       type: 'line',
       itemStyle: {
         color: 'rgb(255, 200, 100)'
@@ -64,18 +66,29 @@ const option = ref({
 });
 
 setInterval(async () => {
-  const data = await fetch(import.meta.env.VITE_API + '/pingjun').then(r => r.json())
-  option.value.series[0].data.push(data.pingjun)
+  const { data } = await useFetch(import.meta.env.VITE_API + '/pingjun').json()
+  option.value.series[0].data.push(data.value.pingjun)
   option.value.series[0].data.shift()
-  option.value.xAxis.data.push(useDateFormat(new Date(),'HH:mm:ss').value)
+  option.value.xAxis.data.push(useDateFormat(new Date(), 'HH:mm:ss').value)
   option.value.xAxis.data.shift()
-  console.log(data)
-}, 300)
+}, 1000)
 </script>
 
 <template>
-  <div class="h-screen">
-    <v-chart class="h-[567px]" :option="option" />
-    <button class="bg-black text-white rounded-md p-2">按钮</button>
+  <div class="h-screen  font-major">
+    <NMessageProvider>
+      <div class="bg-yellow-50 h-16 p-4 flex items-center shadow-md justify-between">
+        <p class="text-xl font-bold ">
+          Mao.
+        </p>
+        <p>
+          Version 0.1
+        </p>
+      </div>
+      <div class="p-8">
+        <v-chart class="h-[567px] p-6 rounded-xl shadow-xl" :option="option" autoresize />
+      </div>
+      <Operations />
+    </NMessageProvider>
   </div>
 </template>

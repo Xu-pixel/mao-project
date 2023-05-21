@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx,vue}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily:{
+        major:'Major Mono Display'
+      }
+    },
   },
   plugins: [],
 }

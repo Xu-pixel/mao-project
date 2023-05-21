@@ -13,7 +13,7 @@ current_value = 0
 count = 0
 data1 = []
 
-#注释以下代码关闭print
+# 注释以下代码关闭print
 print = lambda *args, **kwargs: None
 
 
@@ -69,6 +69,8 @@ def send(send_cmd):
     jtemp_send = json.loads(t_send)
     print(jtemp_send)
 
+    return Point.text
+
 
 # 写一个求平均数的函数
 def average(data_input):
@@ -91,9 +93,9 @@ ccc = 0
 
 
 # Define a simple route
-@app.route("/pingjun", methods=["GET"])
+@app.get("/pingjun")
 def home():
-    global count, pingjun,ccc,flag,data_value,data1
+    global count, pingjun, ccc, flag, data_value, data1
     headers = {"api-key": "jE6UQFJ3fJ64YkU5yGj7zu0XBV8="}
     url_point = "http://api.heclouds.com/devices/1068071955/datastreams?datastream_ids=gm,hum,temp,wind"
     Point = requests.get(url_point, headers=headers)
@@ -139,3 +141,9 @@ def home():
         data1 = []
 
     return jsonify({"pingjun": pingjun})
+
+
+@app.post("/send")
+def send_api():
+    send_cmd = request.get_json()["cmd"]
+    return jsonify({"info": send(send_cmd)})

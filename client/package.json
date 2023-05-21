@@ -11,6 +11,7 @@
   "dependencies": {
     "@vueuse/core": "^10.1.2",
     "echarts": "^5.4.2",
+    "naive-ui": "^2.34.3",
     "vue": "^3.2.47",
     "vue-echarts": "^6.5.5"
   },
